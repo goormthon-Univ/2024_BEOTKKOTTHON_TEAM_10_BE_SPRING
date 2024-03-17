@@ -22,7 +22,7 @@ jobs:
           stage: main
           yaml: |
             name: cen
-            app: java@20
+            app: java@17
             options:
               ports: 8080
               env:
