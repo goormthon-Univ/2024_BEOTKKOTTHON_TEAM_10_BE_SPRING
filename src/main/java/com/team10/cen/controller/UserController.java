@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -36,7 +38,9 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<String> testEndpoint(@RequestHeader("userid") String userId) {
-        return ResponseEntity.ok("User ID: " + userId);
+    public ResponseEntity<Map<String, String>> testEndpoint(@RequestHeader("userid") String userId) {
+        Map<String, String> response = new HashMap<>();
+        response.put("userId", userId);
+        return ResponseEntity.ok().body(response);
     }
 }
