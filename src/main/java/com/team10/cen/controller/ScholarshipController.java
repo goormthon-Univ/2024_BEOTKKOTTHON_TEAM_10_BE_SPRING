@@ -32,9 +32,9 @@ public class ScholarshipController {
         return ResponseEntity.ok(scholarship);
     }
 
-    @GetMapping("/scholarship/user/{userid}")
-    public ResponseEntity<List<Scholarship>> getRecommendedScholarships(@PathVariable String userid) {
-        List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userid);
+    @GetMapping("/scholarship/user")
+    public ResponseEntity<List<Scholarship>> getRecommendedScholarships(@RequestHeader("userid") String userId) {
+        List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userId);
         return ResponseEntity.ok(recommendedScholarships);
     }
 }

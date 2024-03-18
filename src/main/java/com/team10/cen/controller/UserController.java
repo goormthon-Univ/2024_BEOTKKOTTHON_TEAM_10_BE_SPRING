@@ -28,8 +28,8 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/user/{userid}")
-    public ResponseEntity<User> getUserById(@PathVariable String userid) {
+    @GetMapping("/user/each")
+    public ResponseEntity<User> getUserById(@RequestHeader("userid") String userid) {
         User user = userService.getUserById(userid);
         if (user == null) {
             return ResponseEntity.notFound().build();
