@@ -13,8 +13,9 @@ import java.util.Date;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String userid;
+    @Column(name = "userid") // Specify the column name explicitly
+    private String userId;
+
     private String password;
     private String name;
     private String ranking;

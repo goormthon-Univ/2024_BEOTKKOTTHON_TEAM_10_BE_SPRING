@@ -31,4 +31,10 @@ public class ScholarshipController {
         }
         return ResponseEntity.ok(scholarship);
     }
+
+    @GetMapping("/scholarship/user/{userid}")
+    public ResponseEntity<List<Scholarship>> getRecommendedScholarships(@PathVariable String userid) {
+        List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userid);
+        return ResponseEntity.ok(recommendedScholarships);
+    }
 }
