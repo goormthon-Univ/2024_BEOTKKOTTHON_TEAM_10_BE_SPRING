@@ -48,11 +48,10 @@ public class ScholarshipService {
     }
 
     private boolean isScholarshipEligible(User user, Scholarship scholarship) {
-        // Implement eligibility logic here
-        return user.getRanking().equals(scholarship.getSupportRanking()) &&
-                user.getGrade().equals(scholarship.getSupportGrade()) &&
-                user.getRegionCityProvince().equals(scholarship.getSupportCityProvince()) &&
-                user.getRegionCityCountyDistrict().equals(scholarship.getSupportCityCountyDistrict()) &&
-                user.getMajor().equals(scholarship.getSupportMajor());
+        // Check if user's ranking, grade, city/province, and major are all included in supported attributes of the scholarship
+        return scholarship.getSupportRanking().contains(user.getRanking()) &&
+                scholarship.getSupportGrade().contains(user.getGrade()) &&
+                scholarship.getSupportCityProvince().contains(user.getRegionCityProvince()) &&
+                scholarship.getSupportMajor().contains(user.getMajor());
     }
 }
