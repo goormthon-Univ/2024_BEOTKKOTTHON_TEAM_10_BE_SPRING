@@ -33,4 +33,9 @@ public class ScholarshipController {
         }
         return ResponseEntity.ok(scholarship);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> testEndpoint(@RequestHeader("userid") String userId) {
+        return ResponseEntity.ok("User ID: " + userId);
+    }
 }
