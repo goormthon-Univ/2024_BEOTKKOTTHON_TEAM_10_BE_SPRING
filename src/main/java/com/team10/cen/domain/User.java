@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -25,4 +27,10 @@ public class User {
     private String regionCityProvince;
     private String regionCityCountyDistrict;
     private String major;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_scrapped_scholarships",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "scholarship_id"))
+    private Set<Scholarship> scrappedScholarships = new HashSet<>();
 }

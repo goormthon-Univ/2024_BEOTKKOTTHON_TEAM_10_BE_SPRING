@@ -67,4 +67,8 @@ public class ScholarshipService {
         }
         return totalAmount;
     }
+
+    public Scholarship findById(Long id) {
+        return scholarshipRepository.findById(id).orElse(null);
+    }
 }
