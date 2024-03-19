@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,5 +54,14 @@ public class ScholarshipService {
                 scholarship.getSupportGrade().contains(user.getGrade()) &&
                 scholarship.getSupportCityProvince().contains(user.getRegionCityProvince()) &&
                 scholarship.getSupportMajor().contains(user.getMajor());
+    }
+
+    // Method to calculate the total amount of recommended scholarships
+    public BigDecimal calculateTotalAmount(List<Scholarship> scholarships) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (Scholarship scholarship : scholarships) {
+            totalAmount = totalAmount.add(new BigDecimal(scholarship.getAmount()));
+        }
+        return totalAmount;
     }
 }

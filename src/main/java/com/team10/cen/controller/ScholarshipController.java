@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -36,5 +37,12 @@ public class ScholarshipController {
     public ResponseEntity<List<Scholarship>> getRecommendedScholarships(@RequestHeader("userid") String userId) {
         List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userId);
         return ResponseEntity.ok(recommendedScholarships);
+    }
+
+    @GetMapping("/scholarship/user/amount")
+    public ResponseEntity<BigDecimal> getTotalAmountOfRecommendedScholarships(@RequestHeader("userid") String userId) {
+        List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userId);
+        BigDecimal totalAmount = scholarshipService.calculateTotalAmount(recommendedScholarships);
+        return ResponseEntity.ok(totalAmount);
     }
 }
