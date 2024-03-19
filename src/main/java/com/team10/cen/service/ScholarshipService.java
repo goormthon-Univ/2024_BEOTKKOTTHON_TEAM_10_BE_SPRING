@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,11 +49,22 @@ public class ScholarshipService {
     }
 
     private boolean isScholarshipEligible(User user, Scholarship scholarship) {
-        // Implement eligibility logic here
-        return user.getRanking().equals(scholarship.getSupportRanking()) &&
-                user.getGrade().equals(scholarship.getSupportGrade()) &&
-                user.getRegionCityProvince().equals(scholarship.getSupportCityProvince()) &&
-                user.getRegionCityCountyDistrict().equals(scholarship.getSupportCityCountyDistrict()) &&
-                user.getMajor().equals(scholarship.getSupportMajor());
+        // Check if user's ranking, grade, city/province, and major are all included in supported attributes of the scholarship
+        boolean isCityProvinceSupported = scholarship.getSupportCityProvince().contains(user.getRegionCityProvince());
+        boolean isCityCountyDistrictSupported = scholarship.getSupportCityCountyDistrict().contains(user.getRegionCityCountyDistrict());
+
+        return scholarship.getSupportRanking().contains(user.getRanking()) &&
+                scholarship.getSupportGrade().contains(user.getGrade()) &&
+                (isCityProvinceSupported || isCityCountyDistrictSupported) &&
+                scholarship.getSupportMajor().contains(user.getMajor());
+    }
+
+    // Method to calculate the total amount of recommended scholarships
+    public BigDecimal calculateTotalAmount(List<Scholarship> scholarships) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (Scholarship scholarship : scholarships) {
+            totalAmount = totalAmount.add(new BigDecimal(scholarship.getAmount()));
+        }
+        return totalAmount;
     }
 }
