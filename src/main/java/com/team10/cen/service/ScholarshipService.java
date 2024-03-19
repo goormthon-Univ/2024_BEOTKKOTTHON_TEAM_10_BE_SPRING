@@ -50,9 +50,12 @@ public class ScholarshipService {
 
     private boolean isScholarshipEligible(User user, Scholarship scholarship) {
         // Check if user's ranking, grade, city/province, and major are all included in supported attributes of the scholarship
+        boolean isCityProvinceSupported = scholarship.getSupportCityProvince().contains(user.getRegionCityProvince());
+        boolean isCityCountyDistrictSupported = scholarship.getSupportCityCountyDistrict().contains(user.getRegionCityCountyDistrict());
+
         return scholarship.getSupportRanking().contains(user.getRanking()) &&
                 scholarship.getSupportGrade().contains(user.getGrade()) &&
-                scholarship.getSupportCityProvince().contains(user.getRegionCityProvince()) &&
+                (isCityProvinceSupported || isCityCountyDistrictSupported) &&
                 scholarship.getSupportMajor().contains(user.getMajor());
     }
 
