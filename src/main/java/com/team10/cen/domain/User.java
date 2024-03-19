@@ -27,6 +27,7 @@ public class User {
     private String regionCityProvince;
     private String regionCityCountyDistrict;
     private String major;
+    private boolean onboard;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_scrapped_scholarships",
