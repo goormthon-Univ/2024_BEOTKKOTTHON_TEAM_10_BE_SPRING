@@ -24,8 +24,8 @@ public class ScholarshipController {
         return scholarshipService.getAllScholarships();
     }
 
-    @GetMapping("/scholarship/{id}")
-    public ResponseEntity<Scholarship> getScholarshipById(@PathVariable long id) {
+    @GetMapping("/scholarship/each")
+    public ResponseEntity<Scholarship> getScholarshipById(@RequestHeader("scholarshipId") long id) {
         Scholarship scholarship = scholarshipService.getScholarshipById(id);
         if (scholarship == null) {
             return ResponseEntity.notFound().build();
