@@ -31,7 +31,7 @@ jobs:
                 - name: DB_port
                   value: "3306"
                 - name: DB_dataBaseName
-                  value: sys
+                  value: cen
                 - name: DB_name
                   value: han
                 - name: DB_password
