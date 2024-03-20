@@ -27,6 +27,11 @@ public class ScholarshipService {
         return scholarshipRepository.findAllOrderByDDayAsc();
     }
 
+    public List<Scholarship> getAllScholarshipsSortedByCreatedAt() {
+        return scholarshipRepository.findAllOrderByCreatedAtDesc();
+    }
+
+
     public Scholarship getScholarshipById(long id) {
         Optional<Scholarship> scholarshipOptional = scholarshipRepository.findById(id);
         return scholarshipOptional.orElseThrow(() -> new IllegalArgumentException("Scholarship with ID " + id + " not found"));

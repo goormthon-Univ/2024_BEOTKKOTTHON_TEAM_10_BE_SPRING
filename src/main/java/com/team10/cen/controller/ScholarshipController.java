@@ -24,6 +24,11 @@ public class ScholarshipController {
         return scholarshipService.getAllScholarships();
     }
 
+    @GetMapping("/scholarship/all/new")
+    public List<Scholarship> getAllScholarshipsSortedByCreatedAt() {
+        return scholarshipService.getAllScholarshipsSortedByCreatedAt();
+    }
+
     @GetMapping("/scholarship/each")
     public ResponseEntity<Scholarship> getScholarshipById(@RequestHeader("scholarshipId") long id) {
         Scholarship scholarship = scholarshipService.getScholarshipById(id);

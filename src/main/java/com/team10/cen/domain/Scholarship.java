@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
@@ -48,9 +49,11 @@ public class Scholarship {
 
     private Integer dDay;
 
+    private LocalDateTime createdAt;
+
     // Callback method to calculate and set D-day before persisting
     @PrePersist
-    public void calculateAndSetDday() {
+    public void calculateAndSetDdayAndCreatedAt() {
         if (endDate != null && !endDate.isEmpty()) {
             // 현재 날짜 가져오기
             LocalDate currentDate = LocalDate.now();
@@ -69,5 +72,8 @@ public class Scholarship {
         } else {
             System.out.println("End Date is null or empty");
         }
+
+        // 추가: 생성 시간 설정
+        setCreatedAt(LocalDateTime.now());
     }
 }
