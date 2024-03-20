@@ -23,6 +23,12 @@ public class Scholarship {
 
     private String description;
 
+    private String description2;
+
+    private String description3;
+
+    private String description4;
+
     private String provider;
 
     private String startDate;
@@ -31,9 +37,17 @@ public class Scholarship {
 
     private String amount;
 
+    private String amount2;
+
     private String supportRanking;
 
     private String supportGrade;
+
+    private String supportTarget;
+
+    private String supportTarget2;
+
+    private String supportTarget3;
 
     private String supportCityProvince;
 
@@ -44,8 +58,6 @@ public class Scholarship {
     private String requiredDocuments;
 
     private String site;
-
-    private String supportTarget;
 
     private Integer dDay;
 
