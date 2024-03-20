@@ -24,7 +24,7 @@ public class ScholarshipService {
         this.scholarshipRepository = scholarshipRepository;
     }
     public List<Scholarship> getAllScholarships() {
-        return scholarshipRepository.findAll();
+        return scholarshipRepository.findAllOrderByDDayAsc();
     }
 
     public Scholarship getScholarshipById(long id) {
