@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentService {
@@ -17,7 +18,11 @@ public class DocumentService {
     }
 
     public List<Document> getAllDocuments() {
-        return documentRepository.findAll();
+        // Fetch all documents from the repository and sort them alphabetically by title
+        List<Document> documents = documentRepository.findAll();
+        return documents.stream()
+                .sorted((d1, d2) -> d1.getTitle().compareToIgnoreCase(d2.getTitle()))
+                .collect(Collectors.toList());
     }
 
     public Document getDocumentById(int id) {
