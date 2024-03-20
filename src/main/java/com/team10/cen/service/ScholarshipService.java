@@ -55,13 +55,18 @@ public class ScholarshipService {
 
     private boolean isScholarshipEligible(User user, Scholarship scholarship) {
         // Check if user's ranking, grade, city/province, and major are all included in supported attributes of the scholarship
-        boolean isCityProvinceSupported = scholarship.getSupportCityProvince().contains(user.getRegionCityProvince());
-        boolean isCityCountyDistrictSupported = scholarship.getSupportCityCountyDistrict().contains(user.getRegionCityCountyDistrict());
+        boolean isCityProvinceSupported = scholarship.getSupportCityProvince() != null && scholarship.getSupportCityProvince().contains(user.getRegionCityProvince());
+        boolean isCityCountyDistrictSupported = scholarship.getSupportCityCountryDistrict() != null && scholarship.getSupportCityCountryDistrict().contains(user.getRegionCityCountryDistrict());
 
-        return scholarship.getSupportRanking().contains(user.getRanking()) &&
-                scholarship.getSupportGrade().contains(user.getGrade()) &&
+        // Handle cases where supported attributes might be null
+        String supportRanking = scholarship.getSupportRanking();
+        String supportGrade = scholarship.getSupportGrade();
+        String supportMajor = scholarship.getSupportMajor();
+
+        return supportRanking != null && supportRanking.contains(user.getRanking()) &&
+                supportGrade != null && supportGrade.contains(user.getGrade()) &&
                 (isCityProvinceSupported || isCityCountyDistrictSupported) &&
-                scholarship.getSupportMajor().contains(user.getMajor());
+                supportMajor != null && supportMajor.contains(user.getMajor());
     }
 
     // Method to calculate the total amount of recommended scholarships

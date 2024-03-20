@@ -1,5 +1,6 @@
 package com.team10.cen.domain;
 
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,9 +50,11 @@ public class Scholarship {
 
     private String supportTarget3;
 
+    @Column(nullable = true)
     private String supportCityProvince;
 
-    private String supportCityCountyDistrict;
+    @Column(nullable = true)
+    private String supportCityCountryDistrict;
 
     private String supportMajor;
 
