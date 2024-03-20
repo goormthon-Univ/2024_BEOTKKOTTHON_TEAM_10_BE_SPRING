@@ -25,4 +25,5 @@ public class User {
     private String regionCityProvince;
     private String regionCityCountyDistrict;
     private String major;
+    private boolean onboard;
 }

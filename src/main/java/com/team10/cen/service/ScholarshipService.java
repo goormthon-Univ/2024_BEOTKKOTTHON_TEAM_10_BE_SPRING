@@ -24,8 +24,13 @@ public class ScholarshipService {
         this.scholarshipRepository = scholarshipRepository;
     }
     public List<Scholarship> getAllScholarships() {
-        return scholarshipRepository.findAll();
+        return scholarshipRepository.findAllOrderByDDayAsc();
     }
+
+    public List<Scholarship> getAllScholarshipsSortedByCreatedAt() {
+        return scholarshipRepository.findAllOrderByCreatedAtDesc();
+    }
+
 
     public Scholarship getScholarshipById(long id) {
         Optional<Scholarship> scholarshipOptional = scholarshipRepository.findById(id);
