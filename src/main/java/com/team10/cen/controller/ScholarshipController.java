@@ -2,6 +2,8 @@ package com.team10.cen.controller;
 
 import com.team10.cen.domain.Scholarship;
 import com.team10.cen.service.ScholarshipService;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +19,6 @@ public class ScholarshipController {
     @Autowired
     public ScholarshipController(ScholarshipService scholarshipService) {
         this.scholarshipService = scholarshipService;
-    }
-
-    @GetMapping("/scholarship/all")
-    public List<Scholarship> getAllScholarships() {
-        return scholarshipService.getAllScholarships();
-    }
-
-    @GetMapping("/scholarship/all/new")
-    public List<Scholarship> getAllScholarshipsSortedByCreatedAt() {
-        return scholarshipService.getAllScholarshipsSortedByCreatedAt();
     }
 
     @GetMapping("/scholarship/each")
@@ -45,9 +37,22 @@ public class ScholarshipController {
     }
 
     @GetMapping("/scholarship/user/amount")
-    public ResponseEntity<BigDecimal> getTotalAmountOfRecommendedScholarships(@RequestHeader("userid") String userId) {
+    public ResponseEntity<Object> getTotalAmountOfRecommendedScholarships(@RequestHeader("userid") String userId) {
         List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userId);
         BigDecimal totalAmount = scholarshipService.calculateTotalAmount(recommendedScholarships);
-        return ResponseEntity.ok(totalAmount);
+
+        // Create a JSON object to hold the total amount
+        TotalAmountResponse response = new TotalAmountResponse(totalAmount);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Getter @Setter
+    static class TotalAmountResponse {
+        private BigDecimal totalAmount;
+
+        public TotalAmountResponse(BigDecimal totalAmount) {
+            this.totalAmount = totalAmount;
+        }
     }
 }

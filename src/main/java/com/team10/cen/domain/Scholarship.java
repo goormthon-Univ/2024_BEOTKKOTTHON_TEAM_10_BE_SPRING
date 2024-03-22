@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Getter @Setter
@@ -50,11 +51,7 @@ public class Scholarship {
 
     private String supportTarget3;
 
-    @Column(nullable = true)
     private String supportCityProvince;
-
-    @Column(nullable = true)
-    private String supportCityCountryDistrict;
 
     private String supportMajor;
 
@@ -62,33 +59,25 @@ public class Scholarship {
 
     private String site;
 
-    private Integer dDay;
-
     private LocalDateTime createdAt;
 
-    // Callback method to calculate and set D-day before persisting
-    @PrePersist
-    public void calculateAndSetDdayAndCreatedAt() {
-        if (endDate != null && !endDate.isEmpty()) {
-            // 현재 날짜 가져오기
-            LocalDate currentDate = LocalDate.now();
-            System.out.println("Current Date: " + currentDate);
+    @Transient
+    private Long dDay;
 
-            // 마감일을 LocalDate로 변환
-            LocalDate endDateLocalDate = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            System.out.println("Parsed End Date: " + endDateLocalDate);
+    // Getter와 Setter도 추가합니다.
 
-            // 현재 날짜와 마감일 간의 차이 계산
-            int dday = (int) currentDate.until(endDateLocalDate).getDays();
-            System.out.println("Calculated D-day: " + dday);
-
-            // Scholarship 엔티티에 D-day 정보 설정
-            setDDay(dday);
+    public Long getDDay() {
+        // 현재 날짜와 종료일 간의 차이를 계산하여 D-DAY를 반환합니다.
+        if (endDate != null) {
+            LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate now = LocalDate.now();
+            return now.until(end, ChronoUnit.DAYS);
         } else {
-            System.out.println("End Date is null or empty");
+            return null;
         }
+    }
 
-        // 추가: 생성 시간 설정
-        setCreatedAt(LocalDateTime.now());
+    public void setDDay(Long dDay) {
+        this.dDay = dDay;
     }
 }
