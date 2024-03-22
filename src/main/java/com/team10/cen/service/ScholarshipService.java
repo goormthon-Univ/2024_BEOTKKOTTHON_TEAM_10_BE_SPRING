@@ -55,13 +55,19 @@ public class ScholarshipService {
 
     private boolean isScholarshipEligible(User user, Scholarship scholarship) {
         // Check if user's ranking, grade, city/province, and major are all included in supported attributes of the scholarship
-        boolean isCityProvinceSupported = scholarship.getSupportCityProvince() != null && scholarship.getSupportCityProvince().contains(user.getRegionCityProvince());
-        boolean isCityCountyDistrictSupported = scholarship.getSupportCityProvince() != null && scholarship.getSupportCityProvince().contains(user.getRegionCityCountryDistrict());
+        boolean isCityProvinceSupported = scholarship.getSupportCityProvince() != null && !scholarship.getSupportCityProvince().equals("해당없음") && scholarship.getSupportCityProvince().contains(user.getRegionCityProvince());
+        boolean isCityCountyDistrictSupported = scholarship.getSupportCityProvince() != null && !scholarship.getSupportCityProvince().equals("해당없음") && scholarship.getSupportCityProvince().contains(user.getRegionCityCountryDistrict());
 
         // Handle cases where supported attributes might be null
         String supportRanking = scholarship.getSupportRanking();
         String supportGrade = scholarship.getSupportGrade();
         String supportMajor = scholarship.getSupportMajor();
+
+        // If supportCityProvince is "Not Applicable", consider it supported
+        if ("해당없음".equals(scholarship.getSupportCityProvince())) {
+            isCityProvinceSupported = true;
+            isCityCountyDistrictSupported = true;
+        }
 
         return supportRanking != null && supportRanking.contains(user.getRanking()) &&
                 supportGrade != null && supportGrade.contains(user.getGrade()) &&
