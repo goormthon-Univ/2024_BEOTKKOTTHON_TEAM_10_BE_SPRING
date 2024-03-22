@@ -50,11 +50,7 @@ public class Scholarship {
 
     private String supportTarget3;
 
-    @Column(nullable = true)
     private String supportCityProvince;
-
-    @Column(nullable = true)
-    private String supportCityCountryDistrict;
 
     private String supportMajor;
 
