@@ -22,10 +22,8 @@ public class User {
     private String name;
     private String ranking;
     private String grade;
-    private Date createdAt;
-    private Date updatedAt;
     private String regionCityProvince;
-    private String regionCityCountyDistrict;
+    private String regionCityCountryDistrict;
     private String major;
     private boolean onboard;
 
