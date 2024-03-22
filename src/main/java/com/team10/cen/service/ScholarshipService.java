@@ -11,7 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,34 +27,47 @@ public class ScholarshipService {
     public ScholarshipService(ScholarshipRepository scholarshipRepository) {
         this.scholarshipRepository = scholarshipRepository;
     }
-    public List<Scholarship> getAllScholarships() {
-        return scholarshipRepository.findAllOrderByDDayAsc();
-    }
-
-    public List<Scholarship> getAllScholarshipsSortedByCreatedAt() {
-        return scholarshipRepository.findAllOrderByCreatedAtDesc();
-    }
-
 
     public Scholarship getScholarshipById(long id) {
         Optional<Scholarship> scholarshipOptional = scholarshipRepository.findById(id);
-        return scholarshipOptional.orElseThrow(() -> new IllegalArgumentException("Scholarship with ID " + id + " not found"));
+        Scholarship scholarship = scholarshipOptional.orElseThrow(() -> new IllegalArgumentException("Scholarship with ID " + id + " not found"));
+
+        // D-DAY를 계산하여 Scholarship 객체에 할당
+        scholarship.setDDay(calculateDDay(scholarship.getEndDate()));
+
+        return scholarship;
     }
 
     @Autowired
     private UserRepository userRepository;
 
-    public List<Scholarship> getRecommendedScholarships(String userid) {
-        User user = userRepository.findByUserId(userid);
+    public List<Scholarship> getRecommendedScholarships(String userId) {
+        User user = userRepository.findByUserId(userId);
         List<Scholarship> allScholarships = scholarshipRepository.findAll();
         List<Scholarship> recommendedScholarships = new ArrayList<>();
 
         for (Scholarship scholarship : allScholarships) {
             if (isScholarshipEligible(user, scholarship)) {
+                // D-DAY를 계산하여 Scholarship 객체에 할당
+                scholarship.setDDay(calculateDDay(scholarship.getEndDate()));
                 recommendedScholarships.add(scholarship);
             }
         }
+
+        // D-DAY를 기준으로 오름차순으로 정렬
+        recommendedScholarships.sort(Comparator.comparingLong(Scholarship::getDDay));
+
         return recommendedScholarships;
+    }
+
+    private Long calculateDDay(String endDate) {
+        if (endDate != null) {
+            LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate now = LocalDate.now();
+            return now.until(end, ChronoUnit.DAYS);
+        } else {
+            return null;
+        }
     }
 
     private boolean isScholarshipEligible(User user, Scholarship scholarship) {
