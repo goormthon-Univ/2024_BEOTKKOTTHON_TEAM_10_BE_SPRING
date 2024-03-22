@@ -69,11 +69,22 @@ public class ScholarshipService {
                 supportMajor != null && supportMajor.contains(user.getMajor());
     }
 
-    // Method to calculate the total amount of recommended scholarships
     public BigDecimal calculateTotalAmount(List<Scholarship> scholarships) {
         BigDecimal totalAmount = BigDecimal.ZERO;
         for (Scholarship scholarship : scholarships) {
-            totalAmount = totalAmount.add(new BigDecimal(scholarship.getAmount()));
+            String amountString = scholarship.getAmount();
+            if (amountString.contains(",")) {
+                // If the amount string contains commas, remove them before parsing
+                amountString = amountString.replace(",", "");
+            }
+            try {
+                BigDecimal amount = new BigDecimal(amountString);
+                totalAmount = totalAmount.add(amount);
+            } catch (NumberFormatException e) {
+                // Handle the case where the amount string cannot be parsed as a BigDecimal
+                System.err.println("Invalid amount format: " + amountString);
+                // You can log the error or handle it in another appropriate way
+            }
         }
         return totalAmount;
     }
