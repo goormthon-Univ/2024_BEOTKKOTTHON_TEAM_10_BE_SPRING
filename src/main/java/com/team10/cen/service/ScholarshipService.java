@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,18 +46,18 @@ public class ScholarshipService {
                 // D-DAY를 계산하여 Scholarship 객체에 할당
                 scholarship.setDDay(calculateDDay(scholarship.getEndDate()));
                 recommendedScholarships.add(scholarship);
-
-                // getDDay()를 호출하여 D-DAY를 사용하는 예제
-                Long dDay = scholarship.getDDay();
-                // 이제 dDay를 사용할 수 있습니다.
             }
         }
+
+        // D-DAY를 기준으로 오름차순으로 정렬
+        recommendedScholarships.sort(Comparator.comparingLong(Scholarship::getDDay));
+
         return recommendedScholarships;
     }
 
     private Long calculateDDay(String endDate) {
         if (endDate != null) {
-            LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ISO_DATE);
+            LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             LocalDate now = LocalDate.now();
             return now.until(end, ChronoUnit.DAYS);
         } else {
