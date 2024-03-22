@@ -27,7 +27,7 @@ public class User {
     private String major;
     private boolean onboard;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_scrapped_scholarships",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "scholarship_id"))
