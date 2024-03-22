@@ -9,10 +9,4 @@ import java.util.List;
 
 @Repository
 public interface ScholarshipRepository extends JpaRepository<Scholarship, Long> {
-    @Query("SELECT s FROM Scholarship s ORDER BY s.dDay ASC")
-    List<Scholarship> findAllOrderByDDayAsc();
-
-    // Custom query to fetch all scholarships sorted by creation time in descending order
-    @Query("SELECT s FROM Scholarship s ORDER BY s.createdAt DESC")
-    List<Scholarship> findAllOrderByCreatedAtDesc();
 }

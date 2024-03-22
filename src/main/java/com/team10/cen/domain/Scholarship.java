@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Getter @Setter
@@ -59,4 +60,24 @@ public class Scholarship {
     private String site;
 
     private LocalDateTime createdAt;
+
+    @Transient
+    private Long dDay;
+
+    // Getter와 Setter도 추가합니다.
+
+    public Long getDDay() {
+        // 현재 날짜와 종료일 간의 차이를 계산하여 D-DAY를 반환합니다.
+        if (endDate != null) {
+            LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate now = LocalDate.now();
+            return now.until(end, ChronoUnit.DAYS);
+        } else {
+            return null;
+        }
+    }
+
+    public void setDDay(Long dDay) {
+        this.dDay = dDay;
+    }
 }
