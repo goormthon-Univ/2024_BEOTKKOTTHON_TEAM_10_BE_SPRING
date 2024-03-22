@@ -19,21 +19,10 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
+
     @GetMapping("/documents")
-    public ResponseEntity<Map<String, List<Document>>> getAllDocuments(@RequestHeader(value = "Initial-Consonant", required = false) Integer initialConsonant) {
-        Map<String, List<Document>> groupedDocuments = new HashMap<>();
-
-        if (initialConsonant != null && initialConsonant >= 1 && initialConsonant <= 14) {
-            String consonantKey = String.valueOf(documentService.getConsonantForNumber(initialConsonant));
-            groupedDocuments.put(consonantKey, documentService.getDocumentsByInitialConsonant(initialConsonant));
-        } else {
-            // If Initial-Consonant header is not provided or out of range, return all documents grouped by initial consonants
-            for (int i = 1; i <= 14; i++) {
-                String consonantKey = String.valueOf(documentService.getConsonantForNumber(i));
-                groupedDocuments.put(consonantKey, documentService.getDocumentsByInitialConsonant(i));
-            }
-        }
-
+    public ResponseEntity<Map<String, List<Document>>> getAllDocumentsGroupedByConsonant() {
+        Map<String, List<Document>> groupedDocuments = documentService.getAllDocumentsGroupedByConsonant();
         return ResponseEntity.ok(groupedDocuments);
     }
 

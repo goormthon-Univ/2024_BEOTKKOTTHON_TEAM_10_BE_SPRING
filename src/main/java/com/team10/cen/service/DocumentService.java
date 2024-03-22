@@ -5,7 +5,10 @@ import com.team10.cen.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,40 +20,40 @@ public class DocumentService {
         this.documentRepository = documentRepository;
     }
 
-    public List<Document> getAllDocuments() {
-        // Fetch all documents from the repository and sort them alphabetically by title
+    public Map<String, List<Document>> getAllDocumentsGroupedByConsonant() {
         List<Document> documents = documentRepository.findAll();
-        return documents.stream()
-                .sorted((d1, d2) -> d1.getTitle().compareToIgnoreCase(d2.getTitle()))
-                .collect(Collectors.toList());
+
+        // Group documents by their initial consonants
+        Map<String, List<Document>> groupedDocuments = new HashMap<>();
+        for (Document document : documents) {
+            String initialConsonant = getInitialConsonant(document.getTitle());
+            if (!groupedDocuments.containsKey(initialConsonant)) {
+                groupedDocuments.put(initialConsonant, new ArrayList<>());
+            }
+            groupedDocuments.get(initialConsonant).add(document);
+        }
+
+        // Sort documents within each group alphabetically by title
+        groupedDocuments.forEach((key, value) ->
+                value.sort((d1, d2) -> d1.getTitle().compareToIgnoreCase(d2.getTitle())));
+
+        return groupedDocuments;
     }
 
-    public List<Document> getDocumentsByInitialConsonant(int initialConsonant) {
-        char chosenConsonant = getConsonantForNumber(initialConsonant);
-        return getAllDocuments().stream()
-                .filter(document -> {
-                    char firstChar = document.getTitle().charAt(0);
-                    return isSameConsonant(firstChar, chosenConsonant);
-                })
-                .collect(Collectors.toList());
+    private String getInitialConsonant(String title) {
+        char firstChar = title.charAt(0);
+        // Korean Hangul Unicode block ranges
+        if (firstChar >= 0xAC00 && firstChar <= 0xD7A3) {
+            int initialValue = (firstChar - 0xAC00) / (21 * 28);
+            // Map each initial consonant to its Unicode range
+            String[] consonants = {"ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"};
+            return consonants[initialValue];
+        } else {
+            // For non-Hangul characters, return the character itself
+            return String.valueOf(firstChar);
+        }
     }
 
-    public char getConsonantForNumber(int number) {
-        // Korean consonants (initial)
-        char[] consonants = {'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'};
-        return consonants[number - 1]; // Adjusting for 0-based index
-    }
-
-    private boolean isSameConsonant(char firstChar, char chosenConsonant) {
-        // Korean consonants (initial)
-        char[] consonants = {'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'};
-
-        // Get the index of the consonant
-        int index = (firstChar - '가') / 588;
-
-        // Check if it matches the chosen consonant
-        return consonants[index] == chosenConsonant;
-    }
 
     public Document getDocumentById(int id) {
         return documentRepository.findById(id).orElse(null);
