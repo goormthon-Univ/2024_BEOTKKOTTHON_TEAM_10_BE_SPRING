@@ -16,9 +16,14 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
-    @GetMapping("/document")
-    public List<Document> getAllDocuments() {
-        return documentService.getAllDocuments();
+    @GetMapping("/documents")
+    public List<Document> getAllDocuments(@RequestHeader(value = "Initial-Consonant", required = false) Integer initialConsonant) {
+        if (initialConsonant != null && initialConsonant >= 1 && initialConsonant <= 14) {
+            return documentService.getDocumentsByInitialConsonant(initialConsonant);
+        } else {
+            // If Initial-Consonant header is not provided or out of range, return all documents
+            return documentService.getAllDocuments();
+        }
     }
 
     @GetMapping("/document/each")
