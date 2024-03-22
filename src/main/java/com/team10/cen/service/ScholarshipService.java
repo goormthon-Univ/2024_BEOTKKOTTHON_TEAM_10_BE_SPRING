@@ -30,7 +30,12 @@ public class ScholarshipService {
 
     public Scholarship getScholarshipById(long id) {
         Optional<Scholarship> scholarshipOptional = scholarshipRepository.findById(id);
-        return scholarshipOptional.orElseThrow(() -> new IllegalArgumentException("Scholarship with ID " + id + " not found"));
+        Scholarship scholarship = scholarshipOptional.orElseThrow(() -> new IllegalArgumentException("Scholarship with ID " + id + " not found"));
+
+        // D-DAY를 계산하여 Scholarship 객체에 할당
+        scholarship.setDDay(calculateDDay(scholarship.getEndDate()));
+
+        return scholarship;
     }
 
     @Autowired
