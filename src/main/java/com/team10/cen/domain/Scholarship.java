@@ -58,33 +58,5 @@ public class Scholarship {
 
     private String site;
 
-    private Integer dDay;
-
     private LocalDateTime createdAt;
-
-    // Callback method to calculate and set D-day before persisting
-    @PrePersist
-    public void calculateAndSetDdayAndCreatedAt() {
-        if (endDate != null && !endDate.isEmpty()) {
-            // 현재 날짜 가져오기
-            LocalDate currentDate = LocalDate.now();
-            System.out.println("Current Date: " + currentDate);
-
-            // 마감일을 LocalDate로 변환
-            LocalDate endDateLocalDate = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            System.out.println("Parsed End Date: " + endDateLocalDate);
-
-            // 현재 날짜와 마감일 간의 차이 계산
-            int dday = (int) currentDate.until(endDateLocalDate).getDays();
-            System.out.println("Calculated D-day: " + dday);
-
-            // Scholarship 엔티티에 D-day 정보 설정
-            setDDay(dday);
-        } else {
-            System.out.println("End Date is null or empty");
-        }
-
-        // 추가: 생성 시간 설정
-        setCreatedAt(LocalDateTime.now());
-    }
 }
