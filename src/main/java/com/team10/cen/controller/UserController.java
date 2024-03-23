@@ -5,6 +5,7 @@ import com.team10.cen.domain.User;
 import com.team10.cen.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,16 +44,22 @@ public class UserController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/scholarship/each/save")
-    public ResponseEntity<String> scrapScholarshipById(@RequestHeader("userid") String userId, @RequestBody Map<String, Long> requestBody) {
+    @PostMapping(value = "/scholarship/each/save", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> scrapScholarshipById(@RequestHeader("userid") String userId, @RequestBody Map<String, Long> requestBody) {
+        Map<String, Object> response = new HashMap<>();
         try {
             Long scholarshipId = requestBody.get("scholarshipId");
             userService.scrapScholarshipById(userId, scholarshipId);
-            return ResponseEntity.status(HttpStatus.OK).body("Scholarship successfully scraped.");
+            response.put("status", "success");
+            response.put("message", "Scholarship successfully scraped.");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+    
     // 취소를 위한 새로운 메서드 추가
     @PostMapping("/scholarship/each/cancel")
     public ResponseEntity<String> cancelScrapScholarshipById(@RequestHeader("userid") String userId, @RequestBody Map<String, Long> requestBody) {
