@@ -10,11 +10,10 @@ public class Save {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "saveId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userid")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

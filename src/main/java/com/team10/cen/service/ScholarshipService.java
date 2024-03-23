@@ -121,14 +121,21 @@ public class ScholarshipService {
 
     @Transactional
     public boolean updateScholarshipStatus(String userId, Long scholarshipId, Save.Status status) {
-        Save save = saveRepository.findByUserIdAndScholarshipId(userId, scholarshipId);
-        if (save == null) {
-            return false; // Save record not found
+        // 변경된 부분 시작
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            return false; // 해당 유저를 찾을 수 없음
         }
 
-        save.setStatus(status);
-        saveRepository.save(save);
+        Optional<Save> save = saveRepository.findByUserAndScholarshipId(user, scholarshipId);
+        if (!save.isPresent()) {
+            return false; // 해당 유저의 지원 내역이 없음
+        }
 
-        return true; // Status updated successfully
+        Save savedRecord = save.get();
+        savedRecord.setStatus(status);
+        saveRepository.save(savedRecord);
+        return true; // 상태 업데이트 성공
+        // 변경된 부분 끝
     }
 }

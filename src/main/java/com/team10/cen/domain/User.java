@@ -15,7 +15,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @Column(name = "userId") // Specify the column name explicitly
+    @Column(name = "userid", unique = true) // Specify the column name explicitly
     private String userId;
 
     private String password;
