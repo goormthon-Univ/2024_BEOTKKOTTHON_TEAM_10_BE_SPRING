@@ -60,6 +60,25 @@ public class ScholarshipService {
         return recommendedScholarships;
     }
 
+    public List<Scholarship> getRecommendedScholarshipsUpdate(String userId) {
+        User user = userRepository.findByUserId(userId);
+        List<Scholarship> allScholarships = scholarshipRepository.findAll();
+        List<Scholarship> recommendedScholarships = new ArrayList<>();
+
+        for (Scholarship scholarship : allScholarships) {
+            if (isScholarshipEligible(user, scholarship)) {
+                // D-DAY를 계산하여 Scholarship 객체에 할당
+                scholarship.setDDay(calculateDDay(scholarship.getEndDate()));
+                recommendedScholarships.add(scholarship);
+            }
+        }
+
+        // id를 기준으로 오름차순으로 정렬
+        recommendedScholarships.sort(Comparator.comparingLong(Scholarship::getId));
+
+        return recommendedScholarships;
+    }
+
     private Long calculateDDay(String endDate) {
         if (endDate != null) {
             LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));

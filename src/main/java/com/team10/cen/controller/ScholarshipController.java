@@ -43,6 +43,17 @@ public class ScholarshipController {
         }
     }
 
+    @GetMapping("/scholarship/user/new")
+    public ResponseEntity<?> getRecommendedScholarshipsUpdate(@RequestHeader("userid") String userId) {
+        List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarshipsUpdate(userId);
+
+        if (recommendedScholarships.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No recommended scholarships found.");
+        } else {
+            return ResponseEntity.ok(recommendedScholarships);
+        }
+    }
+
     @GetMapping("/scholarship/user/amount")
     public ResponseEntity<Object> getTotalAmountOfRecommendedScholarships(@RequestHeader("userid") String userId) {
         List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userId);
