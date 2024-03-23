@@ -53,4 +53,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    // 취소를 위한 새로운 메서드 추가
+    @PostMapping("/scholarship/each/cancel")
+    public ResponseEntity<String> cancelScrapScholarshipById(@RequestHeader("userid") String userId, @RequestBody Map<String, Long> requestBody) {
+        try {
+            Long scholarshipId = requestBody.get("scholarshipId");
+            boolean cancellationStatus = userService.cancelScrapScholarshipById(userId, scholarshipId);
+            if (cancellationStatus) {
+                return ResponseEntity.status(HttpStatus.OK).body("Scholarship scrap successfully cancelled.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Scholarship scrap not found for the given user and scholarship ID.");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while cancelling scholarship scrap: " + e.getMessage());
+        }
+    }
 }
