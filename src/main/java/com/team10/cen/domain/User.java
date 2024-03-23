@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -13,7 +15,7 @@ import java.util.Date;
 public class User {
 
     @Id
-    @Column(name = "userid") // Specify the column name explicitly
+    @Column(name = "userid", unique = true) // Specify the column name explicitly
     private String userId;
 
     private String password;
@@ -24,4 +26,7 @@ public class User {
     private String regionCityCountryDistrict;
     private String major;
     private boolean onboard;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Save> saves = new HashSet<>();
 }

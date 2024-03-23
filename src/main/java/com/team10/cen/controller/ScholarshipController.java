@@ -1,10 +1,12 @@
 package com.team10.cen.controller;
 
+import com.team10.cen.domain.Save;
 import com.team10.cen.domain.Scholarship;
 import com.team10.cen.service.ScholarshipService;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +33,14 @@ public class ScholarshipController {
     }
 
     @GetMapping("/scholarship/user")
-    public ResponseEntity<List<Scholarship>> getRecommendedScholarships(@RequestHeader("userid") String userId) {
+    public ResponseEntity<?> getRecommendedScholarships(@RequestHeader("userid") String userId) {
         List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userId);
-        return ResponseEntity.ok(recommendedScholarships);
+
+        if (recommendedScholarships.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No recommended scholarships found.");
+        } else {
+            return ResponseEntity.ok(recommendedScholarships);
+        }
     }
 
     @GetMapping("/scholarship/user/amount")
@@ -54,5 +61,25 @@ public class ScholarshipController {
         public TotalAmountResponse(BigDecimal totalAmount) {
             this.totalAmount = totalAmount;
         }
+    }
+
+    @PostMapping("/scholarship/each/status")
+    public ResponseEntity<String> updateScholarshipStatus(
+            @RequestBody UpdateStatusRequest request,
+            @RequestHeader("USERID") String userId) {
+
+        boolean success = scholarshipService.updateScholarshipStatus(userId, request.getScholarshipId(), request.getStatus());
+
+        if (success) {
+            return ResponseEntity.ok("Status updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update status");
+        }
+    }
+
+    @Getter @Setter
+    public static class UpdateStatusRequest {
+        private Long scholarshipId;
+        private Save.Status status;
     }
 }

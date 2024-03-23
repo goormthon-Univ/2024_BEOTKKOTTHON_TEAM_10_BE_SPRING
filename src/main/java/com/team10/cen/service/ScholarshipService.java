@@ -1,14 +1,14 @@
 package com.team10.cen.service;
 
+import com.team10.cen.domain.Save;
 import com.team10.cen.domain.Scholarship;
 import com.team10.cen.domain.User;
+import com.team10.cen.repository.SaveRepository;
 import com.team10.cen.repository.ScholarshipRepository;
 import com.team10.cen.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -110,5 +110,32 @@ public class ScholarshipService {
             }
         }
         return totalAmount;
+    }
+
+    public Scholarship findById(Long id) {
+        return scholarshipRepository.findById(id).orElse(null);
+    }
+
+    @Autowired
+    private SaveRepository saveRepository;
+
+    @Transactional
+    public boolean updateScholarshipStatus(String userId, Long scholarshipId, Save.Status status) {
+        // 변경된 부분 시작
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            return false; // 해당 유저를 찾을 수 없음
+        }
+
+        Optional<Save> save = saveRepository.findByUserAndScholarshipId(user, scholarshipId);
+        if (!save.isPresent()) {
+            return false; // 해당 유저의 지원 내역이 없음
+        }
+
+        Save savedRecord = save.get();
+        savedRecord.setStatus(status);
+        saveRepository.save(savedRecord);
+        return true; // 상태 업데이트 성공
+        // 변경된 부분 끝
     }
 }
