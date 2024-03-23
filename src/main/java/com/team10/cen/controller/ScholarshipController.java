@@ -37,9 +37,21 @@ public class ScholarshipController {
         List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userId);
 
         if (recommendedScholarships.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No recommended scholarships found.");
+            // 에러 메시지를 JSON 형식으로 반환
+            ErrorMessage error = new ErrorMessage("No recommended scholarships found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         } else {
             return ResponseEntity.ok(recommendedScholarships);
+        }
+    }
+
+    @Getter @Setter
+    // 에러 메시지 클래스
+    private static class ErrorMessage {
+        private String message;
+
+        public ErrorMessage(String message) {
+            this.message = message;
         }
     }
 
