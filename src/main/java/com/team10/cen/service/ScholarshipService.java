@@ -121,7 +121,7 @@ public class ScholarshipService {
 
     @Transactional
     public boolean updateScholarshipStatus(String userId, Long scholarshipId, Save.Status status) {
-        Save save = saveRepository.findByUserUserIdAndScholarshipId(userId, scholarshipId);
+        Save save = saveRepository.findByUserIdAndScholarshipId(userId, scholarshipId);
         if (save == null) {
             return false; // Save record not found
         }

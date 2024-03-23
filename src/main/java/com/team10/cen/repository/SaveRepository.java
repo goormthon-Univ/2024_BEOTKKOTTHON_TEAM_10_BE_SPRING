@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SaveRepository extends JpaRepository<Save, Long> {
 
-    Save findByUserUserIdAndScholarshipId(String userUserId, Long scholarshipId);
+    Save findByUserIdAndScholarshipId(String UserId, Long scholarshipId);
 }
