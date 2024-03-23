@@ -37,6 +37,15 @@ public class UserService {
     public void scrapScholarshipById(String userId, Long scholarshipId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check if the scholarship is already saved by the user
+        boolean alreadySaved = user.getSaves().stream()
+                .anyMatch(save -> save.getScholarship().getId().equals(scholarshipId));
+
+        if (alreadySaved) {
+            throw new RuntimeException("You have already saved this scholarship.");
+        }
+
         Scholarship scholarship = scholarshipService.findById(scholarshipId);
         if (scholarship != null) {
             Save save = new Save();
