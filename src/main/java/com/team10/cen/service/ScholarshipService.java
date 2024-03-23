@@ -73,8 +73,8 @@ public class ScholarshipService {
             }
         }
 
-        // id를 기준으로 오름차순으로 정렬
-        recommendedScholarships.sort(Comparator.comparingLong(Scholarship::getId));
+// Sort in descending order based on id
+        recommendedScholarships.sort(Comparator.comparingLong(Scholarship::getId).reversed());
 
         return recommendedScholarships;
     }
