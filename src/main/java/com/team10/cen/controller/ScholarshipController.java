@@ -33,9 +33,14 @@ public class ScholarshipController {
     }
 
     @GetMapping("/scholarship/user")
-    public ResponseEntity<List<Scholarship>> getRecommendedScholarships(@RequestHeader("userid") String userId) {
+    public ResponseEntity<?> getRecommendedScholarships(@RequestHeader("userid") String userId) {
         List<Scholarship> recommendedScholarships = scholarshipService.getRecommendedScholarships(userId);
-        return ResponseEntity.ok(recommendedScholarships);
+
+        if (recommendedScholarships.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No recommended scholarships found.");
+        } else {
+            return ResponseEntity.ok(recommendedScholarships);
+        }
     }
 
     @GetMapping("/scholarship/user/amount")
