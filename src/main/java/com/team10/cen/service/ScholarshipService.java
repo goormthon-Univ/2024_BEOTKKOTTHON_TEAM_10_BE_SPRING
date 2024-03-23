@@ -1,14 +1,14 @@
 package com.team10.cen.service;
 
+import com.team10.cen.domain.Save;
 import com.team10.cen.domain.Scholarship;
 import com.team10.cen.domain.User;
+import com.team10.cen.repository.SaveRepository;
 import com.team10.cen.repository.ScholarshipRepository;
 import com.team10.cen.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -114,5 +114,21 @@ public class ScholarshipService {
 
     public Scholarship findById(Long id) {
         return scholarshipRepository.findById(id).orElse(null);
+    }
+
+    @Autowired
+    private SaveRepository saveRepository;
+
+    @Transactional
+    public boolean updateScholarshipStatus(String userId, Long scholarshipId, Save.Status status) {
+        Save save = saveRepository.findByUserUserIdAndScholarshipId(userId, scholarshipId);
+        if (save == null) {
+            return false; // Save record not found
+        }
+
+        save.setStatus(status);
+        saveRepository.save(save);
+
+        return true; // Status updated successfully
     }
 }

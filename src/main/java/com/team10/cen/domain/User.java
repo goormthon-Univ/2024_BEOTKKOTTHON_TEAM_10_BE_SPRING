@@ -15,7 +15,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @Column(name = "userid") // Specify the column name explicitly
+    @Column(name = "userId") // Specify the column name explicitly
     private String userId;
 
     private String password;
@@ -27,9 +27,6 @@ public class User {
     private String major;
     private boolean onboard;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_scrapped_scholarships",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "scholarship_id"))
-    private Set<Scholarship> scrappedScholarships = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Save> saves = new HashSet<>();
 }
