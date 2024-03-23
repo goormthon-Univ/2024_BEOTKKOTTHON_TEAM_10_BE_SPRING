@@ -55,7 +55,20 @@ public class ScholarshipService {
         }
 
         // D-DAY를 기준으로 오름차순으로 정렬
-        recommendedScholarships.sort(Comparator.comparingLong(Scholarship::getDDay));
+        recommendedScholarships.sort((scholarship1, scholarship2) -> {
+            long dDay1 = scholarship1.getDDay();
+            long dDay2 = scholarship2.getDDay();
+
+            if (dDay1 >= 0 && dDay2 >= 0) {
+                return Long.compare(dDay1, dDay2);
+            } else if (dDay1 < 0 && dDay2 < 0) {
+                // 둘 다 음수인 경우, 절대값 비교 후 내림차순 정렬
+                return -Long.compare(Math.abs(dDay1), Math.abs(dDay2));
+            } else {
+                // 한 쪽은 양수, 다른 한 쪽은 음수인 경우
+                return dDay1 >= 0 ? -1 : 1;
+            }
+        });
 
         return recommendedScholarships;
     }
